@@ -1,0 +1,126 @@
+# ============================================================
+#  Lyra — .gitignore
+#  Proyecto intermodular 1.º DAM
+# ============================================================
+
+# ------------------------------------------------------------
+#  IntelliJ IDEA
+# ------------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ------------------------------------------------------------
+#  Eclipse
+# ------------------------------------------------------------
+.classpath
+.project
+.settings/
+bin/
+
+# ------------------------------------------------------------
+#  NetBeans
+# ------------------------------------------------------------
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ------------------------------------------------------------
+#  Archivos compilados y directorios de build
+# ------------------------------------------------------------
+*.class
+/target/
+/build/
+/out/
+
+# ------------------------------------------------------------
+#  Maven
+# ------------------------------------------------------------
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ------------------------------------------------------------
+#  Gradle
+# ------------------------------------------------------------
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# ------------------------------------------------------------
+#  Credenciales y configuración local sensible
+# ------------------------------------------------------------
+# Fichero de conexión a BD con credenciales locales
+db.properties
+src/database/db.properties
+*.properties
+
+# Permite mantener el fichero de ejemplo en el repositorio
+!db.properties.example
+!src/database/db.properties.example
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# ------------------------------------------------------------
+#  Archivos de sistema operativo
+# ------------------------------------------------------------
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+
+# ------------------------------------------------------------
+#  Logs y archivos temporales
+# ------------------------------------------------------------
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+logs/
+temp/
+tmp/
+
+# ------------------------------------------------------------
+#  Archivos de empaquetado
+# ------------------------------------------------------------
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Permite mantener librerías externas versionadas si se usan
+!lib/*.jar
+
