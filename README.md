@@ -125,7 +125,7 @@ db.password=<contraseña>
 **En desarrollo** — Primera iteración en curso.
 
 - [x] Estructura inicial del repositorio
-- [ ] Diseño del modelo entidad-relación
+- [x] Diseño del modelo entidad-relación
 - [ ] Scripts SQL (DDL)
 - [ ] Implementación de entidades Java
 - [ ] Capa de acceso a datos (DAO / JDBC)
@@ -137,7 +137,7 @@ db.password=<contraseña>
 
 ## Autores
 
-Proyecto desarrollado por alumnos de **1.º DAM** como proyecto intermodular del curso académico 2025-2026.
+Proyecto desarrollado por JUAN BERMÚDEZ PINO. 
 
 ---
 
