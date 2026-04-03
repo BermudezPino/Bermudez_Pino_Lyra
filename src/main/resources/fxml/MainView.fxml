@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.lyra.controller.MainController">
+
+    <left>
+        <VBox styleClass="sidebar" spacing="5" prefWidth="180">
+            <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+            <Label text="LYRA" styleClass="sidebar-title"/>
+            <Separator/>
+            <Button text="Cabañas"   onAction="#mostrarCabanas"   maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Clientes"  onAction="#mostrarClientes"  maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Reservas"  onAction="#mostrarReservas"  maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Servicios" onAction="#mostrarServicios" maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Empleados" onAction="#mostrarEmpleados" maxWidth="Infinity" styleClass="sidebar-btn"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contenido">
+            <Label text="Selecciona una opción del menú" styleClass="placeholder-text"/>
+        </StackPane>
+    </center>
+
+</BorderPane>

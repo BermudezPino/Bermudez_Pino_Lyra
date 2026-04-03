@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lyra.controller.ReservasController"
+      spacing="10">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Reservas" styleClass="section-title"/>
+        <Button text="Nueva Reserva" onAction="#nuevaReserva" styleClass="btn-primary"/>
+    </HBox>
+
+    <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId"         text="ID"          prefWidth="50"/>
+            <TableColumn fx:id="colCliente"    text="Cliente"     prefWidth="140"/>
+            <TableColumn fx:id="colCabana"     text="Cabaña"      prefWidth="130"/>
+            <TableColumn fx:id="colEntrada"    text="Entrada"     prefWidth="90"/>
+            <TableColumn fx:id="colSalida"     text="Salida"      prefWidth="90"/>
+            <TableColumn fx:id="colEstado"     text="Estado"      prefWidth="100"/>
+            <TableColumn fx:id="colPrecioTotal" text="Total €"    prefWidth="80"/>
+        </columns>
+    </TableView>
+
+    <TitledPane text="Datos de la reserva" expanded="true">
+        <GridPane hgap="10" vgap="8">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <Label text="Cliente:"      GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCliente" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+            <Label text="Cabaña:"       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbCabana"  GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Entrada:"      GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpEntrada" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Salida:"       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dpSalida"  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Estado:"       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="cbEstado"  GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Observaciones:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextArea fx:id="taObservaciones" GridPane.rowIndex="5" GridPane.columnIndex="1" prefHeight="60"/>
+            <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                <Button text="Guardar"         onAction="#guardarReserva"      styleClass="btn-primary"/>
+                <Button text="Cambiar estado"  onAction="#cambiarEstado"/>
+                <Button text="Eliminar"        onAction="#eliminarReserva"     styleClass="btn-danger"/>
+                <Button text="Limpiar"         onAction="#limpiarFormulario"/>
+            </HBox>
+        </GridPane>
+    </TitledPane>
+
+</VBox>

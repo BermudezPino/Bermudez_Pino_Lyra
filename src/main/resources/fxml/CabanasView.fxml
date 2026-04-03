@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.lyra.controller.CabanasController"
+      spacing="10">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Cabañas" styleClass="section-title"/>
+        <Button text="Nueva Cabaña" onAction="#nuevaCabana" styleClass="btn-primary"/>
+    </HBox>
+
+    <TableView fx:id="tablaCabanas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId"          text="ID"           prefWidth="50"/>
+            <TableColumn fx:id="colNombre"      text="Nombre"       prefWidth="180"/>
+            <TableColumn fx:id="colCapacidad"   text="Capacidad"    prefWidth="90"/>
+            <TableColumn fx:id="colPrecio"      text="Precio/noche" prefWidth="110"/>
+            <TableColumn fx:id="colDisponible"  text="Disponible"   prefWidth="90"/>
+        </columns>
+    </TableView>
+
+    <TitledPane text="Datos de la cabaña" expanded="true">
+        <GridPane hgap="10" vgap="8">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <Label text="Nombre:"       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfNombre" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+            <Label text="Descripción:"  GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextArea fx:id="taDescripcion" GridPane.rowIndex="1" GridPane.columnIndex="1" prefHeight="60"/>
+            <Label text="Capacidad:"    GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfCapacidad" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Precio/noche:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="tfPrecio" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Disponible:"   GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <CheckBox fx:id="cbDisponible" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                <Button text="Guardar"   onAction="#guardarCabana"   styleClass="btn-primary"/>
+                <Button text="Eliminar"  onAction="#eliminarCabana"  styleClass="btn-danger"/>
+                <Button text="Limpiar"   onAction="#limpiarFormulario"/>
+            </HBox>
+        </GridPane>
+    </TitledPane>
+
+</VBox>
