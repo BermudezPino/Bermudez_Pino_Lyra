@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="reserva">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cliente"      type="tipoCliente"/>
+                <xs:element name="cabana"       type="tipoCabana"/>
+                <xs:element name="fechaEntrada" type="xs:date"/>
+                <xs:element name="fechaSalida"  type="xs:date"/>
+                <xs:element name="estado"       type="tipoEstado"/>
+                <xs:element name="servicios"    type="tipoServicios"/>
+                <xs:element name="precioTotal"  type="xs:decimal"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:integer" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="tipoCliente">
+        <xs:sequence>
+            <xs:element name="nombre"    type="xs:string"/>
+            <xs:element name="apellidos" type="xs:string"/>
+            <xs:element name="dni"       type="xs:string"/>
+            <xs:element name="email"     type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tipoCabana">
+        <xs:sequence>
+            <xs:element name="nombre"      type="xs:string"/>
+            <xs:element name="capacidad"   type="xs:integer"/>
+            <xs:element name="precioNoche" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="tipoEstado">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PENDIENTE"/>
+            <xs:enumeration value="CONFIRMADA"/>
+            <xs:enumeration value="ACTIVA"/>
+            <xs:enumeration value="COMPLETADA"/>
+            <xs:enumeration value="CANCELADA"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="tipoServicios">
+        <xs:sequence>
+            <xs:element name="servicio" type="tipoServicio" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tipoServicio">
+        <xs:sequence>
+            <xs:element name="nombre"   type="xs:string"/>
+            <xs:element name="subtotal" type="xs:decimal"/>
+        </xs:sequence>
+        <xs:attribute name="cantidad"       type="xs:integer" use="required"/>
+        <xs:attribute name="precioUnitario" type="xs:decimal" use="required"/>
+    </xs:complexType>
+
+</xs:schema>
