@@ -3,10 +3,11 @@ package com.lyra.controller;
 import com.lyra.database.CabanaDAO;
 import com.lyra.database.ClienteDAO;
 import com.lyra.database.ReservaDAO;
-import com.lyra.model.Cabana;
-import com.lyra.model.Cliente;
-import com.lyra.model.EstadoReserva;
-import com.lyra.model.Reserva;
+import com.lyra.database.ServicioExtraDAO;
+import com.lyra.model.*;
+import com.lyra.service.ReservaService;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,157 +19,182 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ReservasController implements Initializable {
 
-    @FXML private TableView<Reserva> tablaReservas;
-    @FXML private TableColumn<Reserva, Integer> colId;
-    @FXML private TableColumn<Reserva, String> colCliente;
-    @FXML private TableColumn<Reserva, String> colCabana;
+    @FXML private TableView<Reserva>              tablaReservas;
+    @FXML private TableColumn<Reserva, Integer>   colId;
+    @FXML private TableColumn<Reserva, String>    colCliente;
+    @FXML private TableColumn<Reserva, String>    colCabana;
     @FXML private TableColumn<Reserva, LocalDate> colEntrada;
     @FXML private TableColumn<Reserva, LocalDate> colSalida;
     @FXML private TableColumn<Reserva, EstadoReserva> colEstado;
     @FXML private TableColumn<Reserva, BigDecimal> colPrecioTotal;
 
-    @FXML private ComboBox<Cliente> cbCliente;
-    @FXML private ComboBox<Cabana> cbCabana;
-    @FXML private DatePicker dpEntrada;
-    @FXML private DatePicker dpSalida;
+    @FXML private ComboBox<Cliente>       cbCliente;
+    @FXML private ComboBox<Cabana>        cbCabana;
+    @FXML private DatePicker              dpEntrada;
+    @FXML private DatePicker              dpSalida;
     @FXML private ComboBox<EstadoReserva> cbEstado;
-    @FXML private TextArea taObservaciones;
+    @FXML private TextArea                taObservaciones;
 
-    private final ReservaDAO reservaDAO = new ReservaDAO();
-    private final ClienteDAO clienteDAO = new ClienteDAO();
-    private final CabanaDAO cabanaDAO = new CabanaDAO();
+    @FXML private ListView<ServicioExtra>             listaServicios;
+    @FXML private TextField                           tfCantidadServicio;
+    @FXML private TableView<ReservaServicio>          tablaServiciosReserva;
+    @FXML private TableColumn<ReservaServicio, String>     colServNombre;
+    @FXML private TableColumn<ReservaServicio, Integer>    colServCantidad;
+    @FXML private TableColumn<ReservaServicio, BigDecimal> colServPrecio;
 
-    private List<Cliente> listaClientes;
-    private List<Cabana> listaCabanas;
+    private final ReservaDAO        reservaDAO        = new ReservaDAO();
+    private final ClienteDAO        clienteDAO        = new ClienteDAO();
+    private final CabanaDAO         cabanaDAO         = new CabanaDAO();
+    private final ServicioExtraDAO  servicioExtraDAO  = new ServicioExtraDAO();
+
+    private List<Cliente>       listaClientes;
+    private List<Cabana>        listaCabanas;
+    private List<ServicioExtra> todosServicios;
+    private List<ReservaServicio> serviciosAnadidos = new ArrayList<>();
     private int idSeleccionado = 0;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        listaClientes = clienteDAO.findAll();
-        listaCabanas = cabanaDAO.findAll();
+    public void initialize(URL url, ResourceBundle rb) {
+        listaClientes  = clienteDAO.findAll();
+        listaCabanas   = cabanaDAO.findAll();
+        todosServicios = servicioExtraDAO.findAll();
 
         cbCliente.setItems(FXCollections.observableArrayList(listaClientes));
-        cbCliente.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Cliente item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre() + " " + item.getApellidos());
-            }
-        });
-        cbCliente.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Cliente item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre() + " " + item.getApellidos());
-            }
-        });
+        cbCliente.setCellFactory(lv -> clienteCell());
+        cbCliente.setButtonCell(clienteCell());
 
         cbCabana.setItems(FXCollections.observableArrayList(listaCabanas));
-        cbCabana.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Cabana item, boolean empty) {
+        cbCabana.setCellFactory(lv -> cabanaCell());
+        cbCabana.setButtonCell(cabanaCell());
+
+        cbEstado.setItems(FXCollections.observableArrayList(EstadoReserva.values()));
+
+        listaServicios.setItems(FXCollections.observableArrayList(todosServicios));
+        listaServicios.setCellFactory(lv -> new ListCell<>() {
+            @Override protected void updateItem(ServicioExtra item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
-            }
-        });
-        cbCabana.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Cabana item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
+                setText(empty || item == null ? null : item.getNombre() + " (" + item.getPrecio() + "€)");
             }
         });
 
-        cbEstado.setItems(FXCollections.observableArrayList(EstadoReserva.values()));
+        colServNombre.setCellValueFactory(data -> {
+            int id = data.getValue().getIdServicioExtra();
+            String nombre = todosServicios.stream()
+                    .filter(s -> s.getId() == id).map(ServicioExtra::getNombre)
+                    .findFirst().orElse("—");
+            return new SimpleStringProperty(nombre);
+        });
+        colServCantidad.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().getCantidad()).asObject());
+        colServPrecio.setCellValueFactory(d -> new SimpleObjectProperty<>(d.getValue().getPrecioUnitario()));
 
         configurarTabla();
         cargarTabla();
 
         tablaReservas.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldVal, newVal) -> {
-                    if (newVal != null) rellenarFormulario(newVal);
-                }
-        );
+                (obs, old, newVal) -> { if (newVal != null) rellenarFormulario(newVal); });
+    }
+
+    private ListCell<Cliente> clienteCell() {
+        return new ListCell<>() {
+            @Override protected void updateItem(Cliente c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : c.getNombre() + " " + c.getApellidos());
+            }
+        };
+    }
+
+    private ListCell<Cabana> cabanaCell() {
+        return new ListCell<>() {
+            @Override protected void updateItem(Cabana c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : c.getNombre());
+            }
+        };
     }
 
     private void configurarTabla() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-
         colCliente.setCellValueFactory(data -> {
-            int idCliente = data.getValue().getIdCliente();
-            String nombre = listaClientes.stream()
-                    .filter(c -> c.getId() == idCliente)
+            int id = data.getValue().getIdCliente();
+            return new SimpleStringProperty(listaClientes.stream()
+                    .filter(c -> c.getId() == id)
                     .map(c -> c.getNombre() + " " + c.getApellidos())
-                    .findFirst().orElse("—");
-            return new SimpleStringProperty(nombre);
+                    .findFirst().orElse("—"));
         });
-
         colCabana.setCellValueFactory(data -> {
-            int idCabana = data.getValue().getIdCabana();
-            String nombre = listaCabanas.stream()
-                    .filter(c -> c.getId() == idCabana)
-                    .map(Cabana::getNombre)
-                    .findFirst().orElse("—");
-            return new SimpleStringProperty(nombre);
+            int id = data.getValue().getIdCabana();
+            return new SimpleStringProperty(listaCabanas.stream()
+                    .filter(c -> c.getId() == id).map(Cabana::getNombre)
+                    .findFirst().orElse("—"));
         });
-
         colEntrada.setCellValueFactory(new PropertyValueFactory<>("fechaEntrada"));
         colSalida.setCellValueFactory(new PropertyValueFactory<>("fechaSalida"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-
         colPrecioTotal.setCellValueFactory(new PropertyValueFactory<>("precioTotal"));
         colPrecioTotal.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
+            @Override protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(String.format("%.2f€", item));
-                }
+                setText(empty || item == null ? null : String.format("%.2f€", item));
             }
         });
     }
 
     private void cargarTabla() {
-        ObservableList<Reserva> datos = FXCollections.observableArrayList(reservaDAO.findAll());
-        tablaReservas.setItems(datos);
+        tablaReservas.setItems(FXCollections.observableArrayList(reservaDAO.findAll()));
     }
 
     private void rellenarFormulario(Reserva r) {
         idSeleccionado = r.getId();
-        cbCliente.getItems().stream()
-                .filter(c -> c.getId() == r.getIdCliente())
-                .findFirst().ifPresent(cbCliente::setValue);
-        cbCabana.getItems().stream()
-                .filter(c -> c.getId() == r.getIdCabana())
-                .findFirst().ifPresent(cbCabana::setValue);
+        cbCliente.getItems().stream().filter(c -> c.getId() == r.getIdCliente()).findFirst().ifPresent(cbCliente::setValue);
+        cbCabana.getItems().stream().filter(c -> c.getId() == r.getIdCabana()).findFirst().ifPresent(cbCabana::setValue);
         dpEntrada.setValue(r.getFechaEntrada());
         dpSalida.setValue(r.getFechaSalida());
         cbEstado.setValue(r.getEstado());
         taObservaciones.setText(r.getObservaciones());
     }
 
-    @FXML
-    public void nuevaReserva() {
-        limpiarFormulario();
+    @FXML private void nuevaReserva() { limpiarFormulario(); }
+
+    @FXML private void añadirServicio() {
+        ServicioExtra sel = listaServicios.getSelectionModel().getSelectedItem();
+        if (sel == null) { alerta("Sin selección", "Selecciona un servicio."); return; }
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(tfCantidadServicio.getText().trim());
+            if (cantidad <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            alerta("Cantidad inválida", "Introduce un entero mayor que 0.");
+            return;
+        }
+        ReservaServicio rs = new ReservaServicio();
+        rs.setIdServicioExtra(sel.getId());
+        rs.setCantidad(cantidad);
+        rs.setPrecioUnitario(sel.getPrecio());
+        serviciosAnadidos.add(rs);
+        tablaServiciosReserva.setItems(FXCollections.observableArrayList(serviciosAnadidos));
+        tfCantidadServicio.clear();
     }
 
-    @FXML
-    public void guardarReserva() {
+    @FXML private void quitarServicio() {
+        ReservaServicio sel = tablaServiciosReserva.getSelectionModel().getSelectedItem();
+        if (sel == null) return;
+        serviciosAnadidos.remove(sel);
+        tablaServiciosReserva.setItems(FXCollections.observableArrayList(serviciosAnadidos));
+    }
+
+    @FXML private void guardarReserva() {
         if (cbCliente.getValue() == null || cbCabana.getValue() == null
                 || dpEntrada.getValue() == null || dpSalida.getValue() == null
                 || cbEstado.getValue() == null) {
-            mostrarError("Campos obligatorios", "Cliente, cabaña, fechas y estado son obligatorios.");
+            alerta("Campos obligatorios", "Cliente, cabaña, fechas y estado son obligatorios.");
             return;
         }
-
         Reserva r = new Reserva();
         r.setIdCliente(cbCliente.getValue().getId());
         r.setIdCabana(cbCabana.getValue().getId());
@@ -176,10 +202,9 @@ public class ReservasController implements Initializable {
         r.setFechaSalida(dpSalida.getValue());
         r.setEstado(cbEstado.getValue());
         r.setObservaciones(taObservaciones.getText());
-
         try {
             if (idSeleccionado == 0) {
-                reservaDAO.save(r);
+                new ReservaService().crearReserva(r, serviciosAnadidos);
             } else {
                 r.setId(idSeleccionado);
                 reservaDAO.update(r);
@@ -187,79 +212,89 @@ public class ReservasController implements Initializable {
             cargarTabla();
             limpiarFormulario();
         } catch (Exception e) {
-            mostrarError("Error al guardar", e.getMessage());
+            alerta("Error al guardar", e.getMessage());
         }
     }
 
-    @FXML
-    public void cambiarEstado() {
-        Reserva seleccionada = tablaReservas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarError("Sin selección", "Selecciona una reserva de la tabla.");
-            return;
-        }
-
-        ChoiceDialog<EstadoReserva> dialog = new ChoiceDialog<>(seleccionada.getEstado(),
-                EstadoReserva.values());
+    @FXML private void cambiarEstado() {
+        Reserva sel = tablaReservas.getSelectionModel().getSelectedItem();
+        if (sel == null) { alerta("Sin selección", "Selecciona una reserva."); return; }
+        ChoiceDialog<EstadoReserva> dialog = new ChoiceDialog<>(sel.getEstado(), EstadoReserva.values());
         dialog.setTitle("Cambiar estado");
-        dialog.setHeaderText("Reserva #" + seleccionada.getId());
+        dialog.setHeaderText("Reserva #" + sel.getId());
         dialog.setContentText("Nuevo estado:");
-
-        Optional<EstadoReserva> resultado = dialog.showAndWait();
-        resultado.ifPresent(nuevoEstado -> {
+        dialog.showAndWait().ifPresent(nuevo -> {
             try {
-                reservaDAO.cambiarEstado(seleccionada.getId(), nuevoEstado);
+                reservaDAO.cambiarEstado(sel.getId(), nuevo);
                 cargarTabla();
                 limpiarFormulario();
             } catch (Exception e) {
-                mostrarError("Error al cambiar estado", e.getMessage());
+                alerta("Error", e.getMessage());
             }
         });
     }
 
-    @FXML
-    public void eliminarReserva() {
-        Reserva seleccionada = tablaReservas.getSelectionModel().getSelectedItem();
-        if (seleccionada == null) {
-            mostrarError("Sin selección", "Selecciona una reserva de la tabla.");
+    @FXML private void eliminarReserva() {
+        Reserva sel = tablaReservas.getSelectionModel().getSelectedItem();
+        if (sel == null) { alerta("Sin selección", "Selecciona una reserva."); return; }
+        new Alert(Alert.AlertType.CONFIRMATION, "¿Eliminar reserva #" + sel.getId() + "?")
+                .showAndWait().ifPresent(r -> {
+                    if (r == ButtonType.OK) {
+                        reservaDAO.delete(sel.getId());
+                        cargarTabla();
+                        limpiarFormulario();
+                    }
+                });
+    }
+
+    @FXML public void exportarXml() {
+        if (idSeleccionado == 0) {
+            alerta("Sin selección", "Selecciona una reserva de la tabla antes de exportar.");
             return;
         }
+        Reserva reserva = reservaDAO.findById(idSeleccionado).orElse(null);
+        if (reserva == null) return;
+        if (reserva.getPrecioTotal() == null) {
+            alerta("Precio no calculado", "La reserva #" + idSeleccionado + " no tiene precio total calculado.");
+            return;
+        }
+        com.lyra.model.Cliente cliente = clienteDAO.findById(reserva.getIdCliente()).orElse(null);
+        com.lyra.model.Cabana cabana = cabanaDAO.findById(reserva.getIdCabana()).orElse(null);
+        List<ReservaServicio> servicios = new com.lyra.database.ReservaServicioDAO().findByReserva(idSeleccionado);
+        List<ServicioExtra> catalogo = servicioExtraDAO.findAll();
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmar eliminación");
-        confirm.setHeaderText("¿Eliminar reserva #" + seleccionada.getId() + "?");
-        confirm.setContentText("Esta acción no se puede deshacer.");
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Guardar XML de reserva");
+        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("XML (*.xml)", "*.xml"));
+        fileChooser.setInitialFileName("reserva_" + idSeleccionado + ".xml");
 
-        confirm.showAndWait().ifPresent(respuesta -> {
-            if (respuesta == ButtonType.OK) {
-                try {
-                    reservaDAO.delete(seleccionada.getId());
-                    cargarTabla();
-                    limpiarFormulario();
-                } catch (Exception e) {
-                    mostrarError("Error al eliminar", e.getMessage());
-                }
-            }
-        });
+        java.io.File archivo = fileChooser.showSaveDialog(tablaReservas.getScene().getWindow());
+        if (archivo == null) return;
+        try {
+            com.lyra.utils.XmlExporter.exportarReserva(reserva, cliente, cabana, servicios, catalogo, archivo.getAbsolutePath());
+            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+            ok.setTitle("Exportación completada");
+            ok.setHeaderText(null);
+            ok.setContentText("XML exportado en: " + archivo.getAbsolutePath());
+            ok.showAndWait();
+        } catch (Exception e) {
+            alerta("Error al exportar XML", e.getMessage());
+        }
     }
 
-    @FXML
-    public void limpiarFormulario() {
+    @FXML public void limpiarFormulario() {
         idSeleccionado = 0;
-        cbCliente.setValue(null);
-        cbCabana.setValue(null);
-        dpEntrada.setValue(null);
-        dpSalida.setValue(null);
-        cbEstado.setValue(null);
-        taObservaciones.clear();
+        cbCliente.setValue(null); cbCabana.setValue(null);
+        dpEntrada.setValue(null); dpSalida.setValue(null);
+        cbEstado.setValue(null);  taObservaciones.clear();
+        serviciosAnadidos = new ArrayList<>();
+        tablaServiciosReserva.setItems(FXCollections.observableArrayList(serviciosAnadidos));
         tablaReservas.getSelectionModel().clearSelection();
     }
 
-    private void mostrarError(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+    private void alerta(String titulo, String msg) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle(titulo); a.setHeaderText(null); a.setContentText(msg);
+        a.showAndWait();
     }
 }

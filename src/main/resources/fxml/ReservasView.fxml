@@ -9,6 +9,16 @@
       spacing="10">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
+    <MenuBar>
+        <menus>
+            <Menu text="Opciones">
+                <items>
+                    <MenuItem text="Exportar XML" onAction="#exportarXml"/>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+
     <HBox alignment="CENTER_LEFT" spacing="10">
         <Label text="Reservas" styleClass="section-title"/>
         <Button text="Nueva Reserva" onAction="#nuevaReserva" styleClass="btn-primary"/>
@@ -41,7 +51,24 @@
             <ComboBox fx:id="cbEstado"  GridPane.rowIndex="4" GridPane.columnIndex="1"/>
             <Label text="Observaciones:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
             <TextArea fx:id="taObservaciones" GridPane.rowIndex="5" GridPane.columnIndex="1" prefHeight="60"/>
-            <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
+            <Label text="Servicios extra:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <VBox GridPane.rowIndex="6" GridPane.columnIndex="1" spacing="4">
+                <ListView fx:id="listaServicios" prefHeight="100"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Cantidad:"/>
+                    <TextField fx:id="tfCantidadServicio" prefWidth="60"/>
+                    <Button text="Añadir" onAction="#añadirServicio"/>
+                </HBox>
+                <TableView fx:id="tablaServiciosReserva" prefHeight="100">
+                    <columns>
+                        <TableColumn fx:id="colServNombre"   text="Servicio"     prefWidth="140"/>
+                        <TableColumn fx:id="colServCantidad" text="Cant."        prefWidth="50"/>
+                        <TableColumn fx:id="colServPrecio"   text="Precio unit." prefWidth="90"/>
+                    </columns>
+                </TableView>
+                <Button text="Quitar seleccionado" onAction="#quitarServicio" styleClass="btn-danger"/>
+            </VBox>
+            <HBox spacing="10" GridPane.rowIndex="7" GridPane.columnIndex="1">
                 <Button text="Guardar"         onAction="#guardarReserva"      styleClass="btn-primary"/>
                 <Button text="Cambiar estado"  onAction="#cambiarEstado"/>
                 <Button text="Eliminar"        onAction="#eliminarReserva"     styleClass="btn-danger"/>
