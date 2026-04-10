@@ -41,16 +41,20 @@ public class XmlExporter {
 
         Element eCliente = doc.createElement("cliente");
         root.appendChild(eCliente);
-        appendText(doc, eCliente, "nombre", cliente.getNombre());
-        appendText(doc, eCliente, "apellidos", cliente.getApellidos());
-        appendText(doc, eCliente, "dni", cliente.getDni());
-        appendText(doc, eCliente, "email", cliente.getEmail());
+        if (cliente != null) {
+            appendText(doc, eCliente, "nombre", cliente.getNombre() != null ? cliente.getNombre() : "");
+            appendText(doc, eCliente, "apellidos", cliente.getApellidos() != null ? cliente.getApellidos() : "");
+            appendText(doc, eCliente, "dni", cliente.getDni() != null ? cliente.getDni() : "");
+            appendText(doc, eCliente, "email", cliente.getEmail() != null ? cliente.getEmail() : "");
+        }
 
         Element eCabana = doc.createElement("cabana");
         root.appendChild(eCabana);
-        appendText(doc, eCabana, "nombre", cabana.getNombre());
-        appendText(doc, eCabana, "capacidad", String.valueOf(cabana.getCapacidad()));
-        appendText(doc, eCabana, "precioNoche", cabana.getPrecioNoche().toPlainString());
+        if (cabana != null) {
+            appendText(doc, eCabana, "nombre", cabana.getNombre() != null ? cabana.getNombre() : "");
+            appendText(doc, eCabana, "capacidad", String.valueOf(cabana.getCapacidad()));
+            appendText(doc, eCabana, "precioNoche", cabana.getPrecioNoche() != null ? cabana.getPrecioNoche().toPlainString() : "0.00");
+        }
 
         appendText(doc, root, "fechaEntrada", reserva.getFechaEntrada().toString());
         appendText(doc, root, "fechaSalida", reserva.getFechaSalida().toString());
@@ -62,7 +66,7 @@ public class XmlExporter {
         Element eServicios = doc.createElement("servicios");
         root.appendChild(eServicios);
 
-        for (ReservaServicio rs : servicios) {
+        if (servicios != null) for (ReservaServicio rs : servicios) {
             ServicioExtra se = catalogoMap.get(rs.getIdServicioExtra());
             if (se == null) continue;
 
@@ -78,7 +82,8 @@ public class XmlExporter {
             appendText(doc, eServicio, "subtotal", subtotal.toPlainString());
         }
 
-        appendText(doc, root, "precioTotal", reserva.getPrecioTotal().toPlainString());
+        appendText(doc, root, "precioTotal",
+                reserva.getPrecioTotal() != null ? reserva.getPrecioTotal().toPlainString() : "0.00");
 
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
