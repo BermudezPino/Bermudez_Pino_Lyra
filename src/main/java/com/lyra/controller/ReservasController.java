@@ -195,6 +195,10 @@ public class ReservasController implements Initializable {
             alerta("Campos obligatorios", "Cliente, cabaña, fechas y estado son obligatorios.");
             return;
         }
+        if (!dpSalida.getValue().isAfter(dpEntrada.getValue())) {
+            alerta("Fechas inválidas", "La fecha de salida debe ser posterior a la de entrada.");
+            return;
+        }
         Reserva r = new Reserva();
         r.setIdCliente(cbCliente.getValue().getId());
         r.setIdCabana(cbCabana.getValue().getId());
@@ -225,7 +229,7 @@ public class ReservasController implements Initializable {
         dialog.setContentText("Nuevo estado:");
         dialog.showAndWait().ifPresent(nuevo -> {
             try {
-                reservaDAO.cambiarEstado(sel.getId(), nuevo);
+                new ReservaService().cambiarEstado(sel.getId(), nuevo);
                 cargarTabla();
                 limpiarFormulario();
             } catch (Exception e) {
