@@ -1,21 +1,21 @@
 # Lyra — Sistema de Gestión de Hotel de Cabañas Rurales
 
-![Estado](https://img.shields.io/badge/estado-en%20desarrollo-yellow)
+![Estado](https://img.shields.io/badge/estado-funcional-brightgreen)
 ![Java](https://img.shields.io/badge/Java-17-orange?logo=java)
+![JavaFX](https://img.shields.io/badge/JavaFX-21-blue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql)
 ![Supabase](https://img.shields.io/badge/Supabase-cloud-3ECF8E?logo=supabase)
-![JDBC](https://img.shields.io/badge/JDBC-Driver-lightgrey)
+![Maven](https://img.shields.io/badge/Maven-3.9+-red?logo=apachemaven)
 ![XML](https://img.shields.io/badge/XML%20%2B%20XSD-validado-green)
-![Git](https://img.shields.io/badge/Git-control%20de%20versiones-red?logo=git)
 ![Licencia](https://img.shields.io/badge/licencia-MIT-brightgreen)
 
 ---
 
 ## Descripción
 
-**Lyra** es una aplicación de escritorio desarrollada en Java para la gestión integral de un hotel de cabañas rurales. Permite administrar reservas, clientes, cabañas y servicios adicionales desde una interfaz sencilla y eficiente, con persistencia de datos en PostgreSQL gestionado con Supabase y exportación/importación de información mediante ficheros XML validados con XSD.
+**Lyra** es una aplicación de escritorio desarrollada en Java 17 con interfaz gráfica JavaFX para la gestión integral de un hotel de cabañas rurales. Permite administrar reservas, clientes, cabañas, empleados y servicios adicionales desde una interfaz visual, con persistencia de datos en PostgreSQL 15 gestionado con Supabase y exportación de información mediante ficheros XML validados con XSD.
 
-El proyecto ha sido desarrollado como proyecto intermodular de **1.º DAM (Desarrollo de Aplicaciones Multiplataforma)**, integrando los conocimientos de los módulos de Programación, Bases de Datos, Lenguajes de Marcas, Sistemas, MPO y Entornos de Desarrollo.
+El proyecto ha sido desarrollado como proyecto intermodular de **1.º DAM (Desarrollo de Aplicaciones Multiplataforma)**, integrando los módulos de Programación (0485), Bases de Datos (0484), Lenguajes de Marcas (0373), Sistemas (0483), MPO y Entornos de Desarrollo (0487).
 
 ---
 
@@ -27,41 +27,59 @@ Los establecimientos rurales de pequeño y mediano tamaño carecen habitualmente
 - Gestionar el catálogo de cabañas disponibles con sus características y precios.
 - Crear, modificar y cancelar reservas, controlando disponibilidad en tiempo real.
 - Asociar servicios adicionales (limpieza, desayuno, excursiones, etc.) a cada reserva.
-- Exportar e importar datos en formato XML para copias de seguridad o intercambio de información.
+- Calcular automáticamente el precio total: días × precio/noche + servicios contratados.
+- Exportar reservas completas a formato XML validado contra un esquema XSD.
+- Registrar qué empleados gestionaron cada reserva y en qué rol.
 
 ---
 
 ## Tecnologías utilizadas
 
-| Tecnología | Uso |
-|---|---|
-| Java 17 | Lenguaje principal de desarrollo |
-| PostgreSQL 15 | Base de datos relacional (cloud via Supabase) |
-| Supabase | Plataforma cloud para PostgreSQL |
-| JDBC | Conexión Java – PostgreSQL |
-| XML + XSD | Exportación de datos y validación de esquemas |
-| Git + GitHub | Control de versiones y repositorio remoto |
-| IntelliJ IDEA | Entorno de desarrollo principal |
+| Tecnología | Versión | Uso |
+|---|---|---|
+| Java | 17 | Lenguaje principal de desarrollo |
+| JavaFX | 21 | Interfaz gráfica de usuario (GUI con FXML) |
+| PostgreSQL | 15 | Base de datos relacional (cloud via Supabase) |
+| Supabase | — | Plataforma cloud para PostgreSQL |
+| JDBC | puro (sin ORM) | Conexión Java – PostgreSQL |
+| Lombok | 1.18.36 | Reducción de código repetitivo (POJOs) |
+| XML + XSD | — | Exportación de datos y validación de esquemas |
+| Apache Maven | 3.9+ | Gestión de dependencias y compilación |
+| Git + GitHub | — | Control de versiones y repositorio remoto |
+| IntelliJ IDEA | — | Entorno de desarrollo principal |
 
 ---
 
 ## Estructura del repositorio
 
 ```
-ProyectoIntermodular/
-├── src/                    # Código fuente Java
-│   ├── model/              # Clases de dominio (entidades)
-│   ├── service/            # Lógica de negocio
-│   ├── controller/         # Controladores de flujo
-│   ├── utils/              # Clases de utilidad y helpers
-│   └── database/           # Gestión de conexión y DAO
-├── sql/                    # Scripts SQL (DDL y datos de prueba)
-├── xml/                    # Ficheros XML y esquemas XSD
-├── diagrams/               # Diagramas UML, ER y de casos de uso
-├── docs/                   # Documentación del proyecto
-│   └── sistemas/           # Documentación del módulo de Sistemas
-├── .gitignore              # Ficheros y carpetas ignorados por Git
-└── README.md               # Este fichero
+Bermudez_Pino_Lyra/
+├── src/
+│   └── main/
+│       ├── java/com/lyra/
+│       │   ├── Launcher.java           # Punto de entrada (ejecutado por Maven/JAR)
+│       │   ├── Main.java               # Aplicación JavaFX
+│       │   ├── model/                  # Clases de dominio (POJOs con Lombok)
+│       │   ├── service/                # Lógica de negocio
+│       │   ├── controller/             # Controladores JavaFX (FXML)
+│       │   ├── utils/                  # XmlExporter, XmlValidator
+│       │   └── database/               # DatabaseConnection (Singleton) y DAOs
+│       └── resources/
+│           ├── fxml/                   # Vistas de la interfaz gráfica
+│           ├── css/                    # Estilos de la aplicación
+│           ├── xml/                    # Esquema XSD de exportación
+│           └── database.properties     # Credenciales (NO subir a GitHub — ver .gitignore)
+├── sql/
+│   ├── schema.sql                      # DDL completo de PostgreSQL
+│   ├── data.sql                        # Datos de ejemplo
+│   └── queries.sql                     # Consultas JDBC documentadas
+├── xml/                                # Exportaciones XML generadas
+├── diagrams/                           # Diagramas E/R y relacionales
+├── docs/
+│   ├── modelo_relacional.md            # Modelo relacional documentado
+│   └── sistemas/                       # Informe técnico (módulo 0483)
+├── pom.xml
+└── README.md
 ```
 
 ---
@@ -70,39 +88,51 @@ ProyectoIntermodular/
 
 | Módulo | Aportación al proyecto |
 |---|---|
-| Programación | Desarrollo de la aplicación en Java (POO, colecciones, excepciones) |
-| Bases de Datos | Diseño del modelo relacional, SQL y acceso con JDBC |
-| Lenguajes de Marcas | Generación y validación de ficheros XML con XSD |
-| Sistemas | Configuración del entorno, scripts de despliegue y administración |
-| MPO | Documentación técnica y manual de usuario |
-| Entornos de Desarrollo | Control de versiones con Git, uso de IDE y depuración |
+| 0484 Bases de Datos | Modelo relacional, scripts SQL DDL/DML, consultas con JOIN |
+| 0485 Programación | Java + JDBC puro + CRUD completo + arquitectura en capas |
+| 0373 Lenguajes de Marcas | Generación y validación de XML con XSD en tiempo de ejecución |
+| 0483 Sistemas Informáticos | Informe del entorno de ejecución y guía de instalación |
+| 0487 Entornos de Desarrollo | Git, historial de commits distribuido, README profesional |
+| MPO | Cálculo automático del precio total, calidad de arquitectura |
+
+---
+
+## Requisitos previos
+
+- **Java 17** JDK — se recomienda [Temurin de Adoptium](https://adoptium.net)
+- **Apache Maven 3.9+**
+- **Git**
+- Credenciales de acceso a la base de datos Supabase (facilitadas por el administrador del proyecto)
 
 ---
 
 ## Instalación y ejecución
 
-> **Requisitos previos:** Java 17+, cuenta en Supabase (o acceso al proyecto configurado), Maven o configuración manual del classpath.
-
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/<usuario>/ProyectoIntermodular.git
-cd ProyectoIntermodular
+git clone https://github.com/BermudezPino/Bermudez_Pino_Lyra.git
+cd Bermudez_Pino_Lyra
 ```
 
 ### 2. Configurar la base de datos
 
-Ejecuta los scripts SQL contra tu instancia de Supabase (o cualquier servidor PostgreSQL compatible):
+Ejecuta los scripts SQL en orden contra tu instancia de PostgreSQL en Supabase:
 
 ```bash
-# Importar el esquema y los datos de prueba (requiere psql)
 psql -h <host-supabase> -U postgres -d postgres -f sql/schema.sql
 psql -h <host-supabase> -U postgres -d postgres -f sql/data.sql
 ```
 
 ### 3. Configurar la conexión
 
-Crea el fichero `src/database/db.properties` con tus credenciales de Supabase:
+Copia el fichero de ejemplo y rellena tus credenciales:
+
+```bash
+cp src/main/resources/database.properties.example src/main/resources/database.properties
+```
+
+Edita `src/main/resources/database.properties`:
 
 ```properties
 db.url=jdbc:postgresql://<host-supabase>:5432/postgres
@@ -112,32 +142,56 @@ db.password=<contraseña>
 
 > Este fichero está excluido del control de versiones por seguridad (ver `.gitignore`).
 
-### 4. Compilar y ejecutar
+### 4. Compilar el proyecto
 
 ```bash
-# (Instrucciones de compilación y ejecución — pendiente de completar)
+mvn clean package
 ```
+
+Maven descarga automáticamente las dependencias (PostgreSQL JDBC, Lombok, JavaFX 21).
+
+### 5. Ejecutar la aplicación
+
+```bash
+mvn javafx:run
+```
+
+La ventana principal de Lyra se abre con un menú lateral para acceder a Cabañas, Clientes, Reservas, Servicios y Empleados.
+
+---
+
+## Resolución de problemas
+
+| Problema | Causa probable | Solución |
+|---|---|---|
+| Error de conexión a la BD | Credenciales incorrectas o archivo no creado | Verificar `src/main/resources/database.properties` |
+| `java -version` no reconocido | JDK no añadido al PATH | Reconfigurar la variable de entorno PATH |
+| Error al compilar con Maven | Dependencias no descargadas | Ejecutar `mvn clean install` con conexión a internet |
+| La ventana no se abre | JavaFX no cargado | Usar `mvn javafx:run` en lugar de `java -jar` |
 
 ---
 
 ## Estado del proyecto
 
-**En desarrollo** — Primera iteración en curso.
+**Funcional** — implementación principal completa.
 
-- [x] Estructura inicial del repositorio
+- [x] Estructura inicial del repositorio y configuración Maven
 - [x] Diseño del modelo entidad-relación
-- [ ] Scripts SQL (DDL)
-- [ ] Implementación de entidades Java
-- [ ] Capa de acceso a datos (DAO / JDBC)
-- [ ] Lógica de negocio (servicios)
-- [ ] Gestión de XML + XSD
-- [ ] Pruebas y documentación final
+- [x] Scripts SQL: DDL (`schema.sql`), datos (`data.sql`), consultas (`queries.sql`)
+- [x] Entidades Java con Lombok (model/)
+- [x] Capa de acceso a datos — DAOs con JDBC puro
+- [x] Lógica de negocio — ReservaService con cálculo automático de precio total
+- [x] Interfaz gráfica JavaFX con vistas FXML y CSS
+- [x] Exportación XML + validación XSD en tiempo de ejecución
+- [ ] Diagramas E/R finales en `/diagrams/`
+- [ ] Capturas de pantalla del sistema en funcionamiento
+- [ ] Entrega final (3 de mayo de 2026)
 
 ---
 
 ## Autores
 
-Proyecto desarrollado por JUAN BERMÚDEZ PINO. 
+Proyecto desarrollado por **Juan Bermúdez Pino** | 1.º DAM | Prometeo by The Power (FP Oficial)
 
 ---
 

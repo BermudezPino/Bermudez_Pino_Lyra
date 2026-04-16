@@ -16,9 +16,9 @@ Lyra es una **aplicación de escritorio** destinada a ejecutarse en el **PC del 
 | Tipo de máquina | PC de usuario (escritorio o portátil) |
 | Modalidad de uso | Monousuario, uso local |
 | Base de datos | Remota en Supabase (PostgreSQL 15 en la nube) |
-| Interfaz | Consola (sin interfaz gráfica) |
+| Interfaz | JavaFX 21 (aplicación de escritorio con interfaz gráfica) |
 
-**Justificación:** La aplicación está diseñada para un único operador que gestiona las reservas, clientes y cabañas del hotel desde un equipo local. La base de datos reside en Supabase (cloud), por lo que el equipo local no necesita alojar ningún servidor de base de datos; solo requiere conexión a internet para comunicarse con el servicio remoto.
+**Justificación:** La aplicación está diseñada para un único operador que gestiona las reservas, clientes y cabañas del hotel desde un equipo local mediante una interfaz gráfica JavaFX con vistas FXML. La base de datos reside en Supabase (cloud), por lo que el equipo local no necesita alojar ningún servidor de base de datos; solo requiere conexión a internet para comunicarse con el servicio remoto.
 
 ---
 
@@ -170,7 +170,7 @@ Maven descargará automáticamente las dependencias definidas en el `pom.xml`:
 | Dependencia | Versión |
 |---|---|
 | PostgreSQL JDBC Driver (`org.postgresql:postgresql`) | 42.7.3 |
-| Lombok (`org.projectlombok:lombok`) | 1.18.30 |
+| Lombok (`org.projectlombok:lombok`) | 1.18.36 |
 | JavaFX Controls (`org.openjfx:javafx-controls`) | 21 |
 | JavaFX FXML (`org.openjfx:javafx-fxml`) | 21 |
 
@@ -184,15 +184,7 @@ Maven descargará automáticamente las dependencias definidas en el `pom.xml`:
 mvn javafx:run
 ```
 
-**Opción B — Ejecutar el JAR generado:**
-
-Tras compilar, el JAR se genera en la carpeta `target/`. Se puede ejecutar con:
-
-```bash
-java -jar target/lyra-1.0-SNAPSHOT.jar
-```
-
-O haciendo doble clic sobre el archivo `.jar` si el sistema tiene asociada la extensión a Java.
+> **Nota:** La ejecución directa con `java -jar` requiere configuración adicional del módulo JavaFX (`--module-path` y `--add-modules`). Se recomienda usar exclusivamente `mvn javafx:run` como método de ejecución.
 
 ---
 
@@ -216,10 +208,13 @@ Bermudez_Pino_Lyra/
 │       ├── java/com/lyra/
 │       │   ├── model/          <- Clases entidad (POJOs)
 │       │   ├── service/        <- Lógica de negocio
-│       │   ├── controller/     <- Menú consola y flujo de usuario
+│       │   ├── controller/     <- Controladores JavaFX (FXML) y flujo de usuario
 │       │   ├── utils/          <- Utilidades (XML, validación, formateo)
 │       │   └── database/       <- Conexión JDBC y DAOs
 │       └── resources/
+│           ├── fxml/                 <- Vistas JavaFX (FXML)
+│           ├── css/                  <- Estilos de la interfaz
+│           ├── xml/                  <- Esquema XSD de validación
 │           └── database.properties   <- Credenciales (NO subir a GitHub)
 ├── docs/
 │   └── sistemas/               <- Este informe y capturas
@@ -265,7 +260,9 @@ Bermudez_Pino_Lyra/
 
 ### Capturas de funcionamiento
 
-Las capturas de pantalla que muestran el funcionamiento de la aplicación (menú principal, gestión de reservas, exportación XML, etc.) se adjuntan en la carpeta:
+Las capturas de pantalla que muestran el funcionamiento de la aplicación (ventana principal, gestión de reservas, exportación XML, etc.) se adjuntan en la carpeta:
+
+> Las capturas se añadirán antes de la entrega final (3 de mayo de 2026).
 
 ```
 docs/sistemas/capturas/

@@ -1,0 +1,9 @@
+# Configuración de conexión a la base de datos PostgreSQL (Supabase)
+# Copia este fichero como database.properties y rellena tus credenciales:
+#   cp src/main/resources/database.properties.example src/main/resources/database.properties
+#
+# NUNCA subas database.properties a Git (está excluido en .gitignore)
+
+db.url=jdbc:postgresql://<host-supabase>:5432/postgres
+db.user=postgres
+db.password=<tu-contraseña-supabase>

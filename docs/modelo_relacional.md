@@ -169,9 +169,26 @@ El campo `estado` de la tabla `reserva` utiliza un tipo `ENUM` de PostgreSQL lla
 **Ciclo de vida:**
 
 ```
-PENDIENTE → CONFIRMADA → ACTIVA → COMPLETADA
-                                ↘
-                                 CANCELADA
+PENDIENTE ──────────────────────────────────┐
+    │                                        │
+    ▼                                        │
+CONFIRMADA ─────────────────────────────────│
+    │                                        │
+    ▼                                        ▼
+ACTIVA ──────────────────────────────── CANCELADA
+    │
+    ▼
+COMPLETADA
 ```
+
+Las transiciones permitidas según la lógica implementada en `ReservaService.cambiarEstado()`:
+
+| Estado actual | Transiciones permitidas |
+|---|---|
+| PENDIENTE | → CONFIRMADA, → CANCELADA |
+| CONFIRMADA | → ACTIVA, → CANCELADA |
+| ACTIVA | → COMPLETADA, → CANCELADA |
+| COMPLETADA | (estado terminal) |
+| CANCELADA | (estado terminal) |
 
 El campo `estado` tiene como valor por defecto `PENDIENTE`, de modo que toda reserva recién creada empieza automáticamente en ese estado.

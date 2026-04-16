@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reserva id="7">
+  <cliente>
+    <nombre>María</nombre>
+    <apellidos>García López</apellidos>
+    <dni>12345678A</dni>
+    <email>maria.garcia@email.com</email>
+  </cliente>
+  <cabana>
+    <nombre>Cabaña El Roble</nombre>
+    <capacidad>4</capacidad>
+    <precioNoche>85.00</precioNoche>
+  </cabana>
+  <fechaEntrada>2026-04-18</fechaEntrada>
+  <fechaSalida>2026-04-21</fechaSalida>
+  <estado>CONFIRMADA</estado>
+  <servicios>
+    <servicio cantidad="3" precioUnitario="8.50">
+      <nombre>Desayuno continental</nombre>
+      <subtotal>25.50</subtotal>
+    </servicio>
+    <servicio cantidad="1" precioUnitario="30.00">
+      <nombre>Servicio de limpieza extra</nombre>
+      <subtotal>30.00</subtotal>
+    </servicio>
+  </servicios>
+  <precioTotal>310.50</precioTotal>
+</reserva>

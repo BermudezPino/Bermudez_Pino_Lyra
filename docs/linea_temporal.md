@@ -25,10 +25,10 @@
 
 ### Tareas
 - [x] Inicializar repositorio Git y crear `.gitignore`
-- [ ] Crear `README.md` con descripción del proyecto, stack y estructura
+- [x] Crear `README.md` con descripción del proyecto, stack y estructura
 - [ ] Diseñar diagrama Entidad-Relación (Cabaña, Cliente, Reserva, ServicioExtra, Empleado, ReservaServicio)
-- [ ] Definir modelo relacional a partir del E/R
-- [ ] Configurar proyecto Maven con `pom.xml` (dependencias: PostgreSQL JDBC, Lombok)
+- [x] Definir modelo relacional a partir del E/R
+- [x] Configurar proyecto Maven con `pom.xml` (dependencias: PostgreSQL JDBC, Lombok, JavaFX 21)
 
 ### Commits sugeridos
 | Día | Mensaje de commit |
@@ -46,10 +46,10 @@
 **Módulos:** 0484 Bases de Datos · 0485 Programación
 
 ### Tareas
-- [ ] Escribir script `schema.sql` con CREATE TABLE para todas las entidades
-- [ ] Definir claves primarias, foráneas y restricciones (NOT NULL, UNIQUE, CHECK)
-- [ ] Insertar datos de prueba con `data.sql` (mínimo 5 cabañas, 10 clientes, 15 reservas)
-- [ ] Crear clase `DatabaseConnection.java` con singleton JDBC
+- [x] Escribir script `schema.sql` con CREATE TABLE para todas las entidades
+- [x] Definir claves primarias, foráneas y restricciones (NOT NULL, UNIQUE, CHECK)
+- [x] Insertar datos de prueba con `data.sql`
+- [x] Crear clase `DatabaseConnection.java` con singleton JDBC
 - [ ] Verificar conexión con Supabase desde IntelliJ
 
 ### Commits sugeridos
@@ -68,11 +68,10 @@
 **Módulos:** 0485 Programación · MPO
 
 ### Tareas
-- [ ] Crear POJOs en `com.lyra.model`: `Cabana`, `Cliente`, `Reserva`, `ServicioExtra`, `Empleado`, `ReservaServicio`
-- [ ] Añadir anotaciones Lombok (`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`)
-- [ ] Crear interfaces DAO genéricas (`findById`, `findAll`, `save`, `update`, `delete`)
-- [ ] Implementar `CabanaDAO` y `ClienteDAO` con consultas SQL básicas
-- [ ] Escribir consultas SQL específicas del módulo 0484 (mínimo 5 consultas documentadas)
+- [x] Crear POJOs en `com.lyra.model`: `Cabana`, `Cliente`, `Reserva`, `ServicioExtra`, `Empleado`, `ReservaServicio`, `ReservaEmpleado`
+- [x] Añadir anotaciones Lombok (`@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`)
+- [x] Implementar `CabanaDAO` y `ClienteDAO` con consultas SQL básicas
+- [x] Escribir consultas SQL específicas del módulo 0484 (queries.sql)
 
 ### Commits sugeridos
 | Día | Mensaje de commit |
@@ -90,11 +89,11 @@
 **Módulos:** 0485 Programación · MPO
 
 ### Tareas
-- [ ] Implementar `ReservaDAO`, `ServicioExtraDAO`, `EmpleadoDAO`, `ReservaServicioDAO`
-- [ ] Crear `ReservaService` con cálculo automático de precio total (días × precio/noche + servicios)
-- [ ] Implementar cambio de estado de reservas: `PENDIENTE → CONFIRMADA → ACTIVA → COMPLETADA/CANCELADA`
-- [ ] Añadir validaciones de negocio (fechas solapadas, cabaña disponible, cliente existe)
-- [ ] Escribir consultas SQL avanzadas: reservas por cliente, ingresos por cabaña, ocupación mensual
+- [x] Implementar `ReservaDAO`, `ServicioExtraDAO`, `EmpleadoDAO`, `ReservaServicioDAO`, `ReservaEmpleadoDAO`
+- [x] Crear `ReservaService` con cálculo automático de precio total (días × precio/noche + servicios)
+- [x] Implementar cambio de estado de reservas: `PENDIENTE → CONFIRMADA → ACTIVA → COMPLETADA/CANCELADA`
+- [x] Añadir validaciones de negocio (fechas, validación de salida posterior a entrada)
+- [x] Escribir consultas SQL avanzadas en queries.sql
 
 ### Commits sugeridos
 | Día | Mensaje de commit |
@@ -107,17 +106,19 @@
 
 ---
 
-## Semana 5 — Menú consola y flujo de usuario
+## Semana 5 — Interfaz JavaFX y flujo de usuario
 **13–19 de abril**
 
 **Módulos:** 0485 Programación · MPO
 
 ### Tareas
-- [ ] Crear `MainMenu.java` en `com.lyra.controller` con menú principal por consola
-- [ ] Implementar submenús: Gestión de Cabañas, Gestión de Clientes, Gestión de Reservas
-- [ ] Añadir flujo completo: crear reserva, añadir servicios, confirmar, cancelar
-- [ ] Crear `ConsoleUtils.java` en `utils` para leer entradas del usuario con validación
-- [ ] Añadir formateo de salida: tablas en consola, fechas en formato `dd/MM/yyyy`
+- [x] Crear `MainController.java` con interfaz JavaFX + FXML (reemplaza el menú consola planeado)
+- [x] Implementar controladores: `CabanasController`, `ClientesController`, `ReservasController`
+- [x] Implementar `ServiciosController` y `EmpleadosController`
+- [x] Flujo completo: crear reserva, añadir servicios, confirmar, cancelar
+- [x] Crear `Launcher.java` como punto de entrada estándar JavaFX
+
+> **Nota:** El proyecto usa interfaz gráfica JavaFX + FXML en lugar de menú por consola.
 
 ### Commits sugeridos
 | Día | Mensaje de commit |
@@ -135,11 +136,11 @@
 **Módulos:** 0373 Lenguajes de Marcas · MPO
 
 ### Tareas
-- [ ] Definir esquema `reserva.xsd` en `src/main/resources/xml/` con validación completa
-- [ ] Crear `XmlExporter.java` en `utils` para generar XML de una reserva con sus servicios
-- [ ] Validar el XML generado contra el XSD en tiempo de ejecución (usando `javax.xml.validation`)
-- [ ] Integrar exportación en el menú consola (opción "Exportar reserva a XML")
-- [ ] Generar al menos un XML de ejemplo para documentación
+- [x] Definir esquema `reserva.xsd` en `src/main/resources/xml/` con validación completa
+- [x] Crear `XmlExporter.java` en `utils` para generar XML de una reserva con sus servicios (DOM)
+- [x] Crear `XmlValidator.java` — valida XML contra XSD en tiempo de ejecución
+- [x] Integrar exportación XML en `ReservasController`
+- [x] Generar ejemplo de XML exportado en `/xml/ejemplo-reserva.xml`
 
 ### Commits sugeridos
 | Día | Mensaje de commit |
@@ -182,7 +183,7 @@
 | 0484 Bases de Datos | Scripts SQL completos + consultas documentadas | Semana 4 |
 | 0487 Entornos de Desarrollo | README profesional + historial de commits distribuido | Semana 1–7 |
 | 0485 Programación | CRUD completo funcionando con JDBC puro | Semana 4 |
-| 0485 Programación | Menú consola operativo con flujo completo | Semana 5 |
+| 0485 Programación | Interfaz JavaFX operativa con flujo completo | Semana 5 |
 | 0373 Lenguajes de Marcas | XSD definido + XML generado y validado | Semana 6 |
 | 0483 Sistemas Informáticos | Informe técnico del entorno redactado | Semana 7 |
 | MPO | Cálculo de precio total + calidad arquitectural | Semana 4–5 |
