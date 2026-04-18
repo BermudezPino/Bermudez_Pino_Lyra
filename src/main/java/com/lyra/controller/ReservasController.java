@@ -3,6 +3,7 @@ package com.lyra.controller;
 import com.lyra.database.CabanaDAO;
 import com.lyra.database.ClienteDAO;
 import com.lyra.database.ReservaDAO;
+import com.lyra.database.ReservaServicioDAO;
 import com.lyra.database.ServicioExtraDAO;
 import com.lyra.model.*;
 import com.lyra.service.ReservaService;
@@ -52,6 +53,8 @@ public class ReservasController implements Initializable {
     private final ClienteDAO        clienteDAO        = new ClienteDAO();
     private final CabanaDAO         cabanaDAO         = new CabanaDAO();
     private final ServicioExtraDAO  servicioExtraDAO  = new ServicioExtraDAO();
+    private final ReservaServicioDAO reservaServicioDAO = new ReservaServicioDAO();
+    private final ReservaService    reservaService    = new ReservaService();
 
     private List<Cliente>       listaClientes;
     private List<Cabana>        listaCabanas;
@@ -157,11 +160,13 @@ public class ReservasController implements Initializable {
         dpSalida.setValue(r.getFechaSalida());
         cbEstado.setValue(r.getEstado());
         taObservaciones.setText(r.getObservaciones());
+        serviciosAnadidos = new ArrayList<>(reservaServicioDAO.findByReserva(r.getId()));
+        tablaServiciosReserva.setItems(FXCollections.observableArrayList(serviciosAnadidos));
     }
 
     @FXML private void nuevaReserva() { limpiarFormulario(); }
 
-    @FXML private void añadirServicio() {
+    @FXML private void anyadirServicio() {
         ServicioExtra sel = listaServicios.getSelectionModel().getSelectedItem();
         if (sel == null) { alerta("Sin selección", "Selecciona un servicio."); return; }
         int cantidad;
@@ -208,7 +213,7 @@ public class ReservasController implements Initializable {
         r.setObservaciones(taObservaciones.getText());
         try {
             if (idSeleccionado == 0) {
-                new ReservaService().crearReserva(r, serviciosAnadidos);
+                reservaService.crearReserva(r, serviciosAnadidos);
             } else {
                 r.setId(idSeleccionado);
                 reservaDAO.update(r);
@@ -229,7 +234,7 @@ public class ReservasController implements Initializable {
         dialog.setContentText("Nuevo estado:");
         dialog.showAndWait().ifPresent(nuevo -> {
             try {
-                new ReservaService().cambiarEstado(sel.getId(), nuevo);
+                reservaService.cambiarEstado(sel.getId(), nuevo);
                 cargarTabla();
                 limpiarFormulario();
             } catch (Exception e) {
@@ -262,9 +267,9 @@ public class ReservasController implements Initializable {
             alerta("Precio no calculado", "La reserva #" + idSeleccionado + " no tiene precio total calculado.");
             return;
         }
-        com.lyra.model.Cliente cliente = clienteDAO.findById(reserva.getIdCliente()).orElse(null);
-        com.lyra.model.Cabana cabana = cabanaDAO.findById(reserva.getIdCabana()).orElse(null);
-        List<ReservaServicio> servicios = new com.lyra.database.ReservaServicioDAO().findByReserva(idSeleccionado);
+        Cliente cliente = clienteDAO.findById(reserva.getIdCliente()).orElse(null);
+        Cabana cabana = cabanaDAO.findById(reserva.getIdCabana()).orElse(null);
+        List<ReservaServicio> servicios = reservaServicioDAO.findByReserva(idSeleccionado);
         List<ServicioExtra> catalogo = servicioExtraDAO.findAll();
 
         javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();

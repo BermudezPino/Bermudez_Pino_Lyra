@@ -57,7 +57,7 @@
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <Label text="Cantidad:"/>
                     <TextField fx:id="tfCantidadServicio" prefWidth="60"/>
-                    <Button text="Añadir" onAction="#añadirServicio"/>
+                    <Button text="Añadir" onAction="#anyadirServicio" styleClass="btn-primary"/>
                 </HBox>
                 <TableView fx:id="tablaServiciosReserva" prefHeight="100">
                     <columns>

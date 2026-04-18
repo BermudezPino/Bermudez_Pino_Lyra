@@ -93,7 +93,8 @@ public class XmlExporter {
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
         File archivo = new File(rutaArchivo);
-        archivo.getParentFile().mkdirs();
+        File padre = archivo.getParentFile();
+        if (padre != null) padre.mkdirs();
         transformer.transform(new DOMSource(doc), new StreamResult(archivo));
     }
 

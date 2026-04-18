@@ -163,8 +163,10 @@ public class ReservaDAO {
         r.setId(rs.getInt("id"));
         r.setIdCliente(rs.getInt("id_cliente"));
         r.setIdCabana(rs.getInt("id_cabana"));
-        r.setFechaEntrada(rs.getDate("fecha_entrada").toLocalDate());
-        r.setFechaSalida(rs.getDate("fecha_salida").toLocalDate());
+        java.sql.Date fechaEntrada = rs.getDate("fecha_entrada");
+        r.setFechaEntrada(fechaEntrada != null ? fechaEntrada.toLocalDate() : null);
+        java.sql.Date fechaSalida = rs.getDate("fecha_salida");
+        r.setFechaSalida(fechaSalida != null ? fechaSalida.toLocalDate() : null);
         r.setEstado(EstadoReserva.valueOf(rs.getString("estado")));
         BigDecimal precio = rs.getBigDecimal("precio_total");
         r.setPrecioTotal(rs.wasNull() ? null : precio);
