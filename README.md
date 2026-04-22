@@ -183,8 +183,8 @@ La ventana principal de Lyra se abre con un menú lateral para acceder a Cabaña
 - [x] Lógica de negocio — ReservaService con cálculo automático de precio total
 - [x] Interfaz gráfica JavaFX con vistas FXML y CSS
 - [x] Exportación XML + validación XSD en tiempo de ejecución
-- [ ] Diagramas E/R finales en `/diagrams/`
-- [ ] Capturas de pantalla del sistema en funcionamiento
+- [x] Diagramas E/R finales en `/diagrams/`
+- [x] Capturas de pantalla del sistema en funcionamiento
 - [ ] Entrega final (3 de mayo de 2026)
 
 ---
