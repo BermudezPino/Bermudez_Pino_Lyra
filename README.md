@@ -68,7 +68,6 @@ Bermudez_Pino_Lyra/
 │           ├── fxml/                   # Vistas de la interfaz gráfica
 │           ├── css/                    # Estilos de la aplicación
 │           ├── xml/                    # Esquema XSD de exportación
-│           └── database.properties     # Credenciales (NO subir a GitHub — ver .gitignore)
 ├── sql/
 │   ├── schema.sql                      # DDL completo de PostgreSQL
 │   ├── data.sql                        # Datos de ejemplo
