@@ -102,9 +102,19 @@ public class ClientesController implements Initializable {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "¿Eliminar este cliente?");
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            new ClienteDAO().delete(idSeleccionado);
-            limpiarFormulario();
-            cargarTabla();
+            try {
+                new ClienteDAO().delete(idSeleccionado);
+                limpiarFormulario();
+                cargarTabla();
+            } catch (RuntimeException e) {
+                String msg = e.getMessage();
+                if (msg != null && msg.contains("fk_reserva_cliente")) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "No se puede eliminar un cliente que tiene reservas asociadas.").showAndWait();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Error al eliminar el cliente: " + msg).showAndWait();
+                }
+            }
         }
     }
 
