@@ -189,6 +189,31 @@ La ventana principal de Lyra se abre con un menú lateral para acceder a Cabaña
 
 ---
 
+## Control de versiones
+
+El proyecto sigue el formato **Conventional Commits** para mantener un historial de cambios legible y ordenado.
+
+Los prefijos que se usan son:
+
+| Prefijo | Cuándo usarlo |
+|---|---|
+| `feat` | Nueva funcionalidad |
+| `fix` | Corrección de un error |
+| `docs` | Cambios en documentación |
+| `build` | Cambios en Maven, dependencias o configuración |
+| `refactor` | Mejora de código sin cambiar comportamiento |
+| `chore` | Tareas de mantenimiento (limpieza, renombrar, etc.) |
+
+Ejemplos:
+
+```
+feat: añadir exportación de reservas a XML
+fix: corregir cálculo del precio total con servicios extra
+docs: actualizar README con instrucciones de instalación
+```
+
+---
+
 ## Autores
 
 Proyecto desarrollado por **Juan Bermúdez Pino** | 1.º DAM | Prometeo by The Power (FP Oficial)
