@@ -124,3 +124,8 @@ tmp/
 # Permite mantener librerías externas versionadas si se usan
 !lib/*.jar
 
+# ------------------------------------------------------------
+#  Archivos internos de desarrollo (solo local)
+# ------------------------------------------------------------
+
+# Herramientas internas de desarrollo
