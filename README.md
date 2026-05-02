@@ -184,7 +184,7 @@ La ventana principal de Lyra se abre con un menú lateral para acceder a Cabaña
 - [x] Exportación XML + validación XSD en tiempo de ejecución
 - [x] Diagramas E/R finales en `/diagrams/`
 - [x] Capturas de pantalla del sistema en funcionamiento
-- [ ] Entrega final (3 de mayo de 2026)
+- [x] Entrega final (3 de mayo de 2026)
 
 ---
 
